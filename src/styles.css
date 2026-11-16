@@ -1,0 +1,149 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/inter';
+
+/* Arthex brand tokens: taken from arthex.ca (red title bars + CTA band, charcoal header/footer,
+   logo house yellow/green). Red is darkened one step for AA text contrast. */
+:root {
+  --ax-ink: #17181b;
+  --ax-ink-2: #222327;
+  --ax-paper: #f6f3ee;
+  --ax-stone: #ebe6de;
+  --ax-line: #ddd6cb;
+  --ax-mute: #5b5d62;
+  --ax-red: #c8131e;
+  --ax-red-ink: #a50f18;
+  --ax-yellow: #f0ea42;
+  --ax-green: #4f9a3a;
+  --ax-header-h: 72px;
+  --ax-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@theme inline {
+  --color-ink: var(--ax-ink);
+  --color-ink-2: var(--ax-ink-2);
+  --color-paper: var(--ax-paper);
+  --color-stone: var(--ax-stone);
+  --color-line: var(--ax-line);
+  --color-mute: var(--ax-mute);
+  --color-red: var(--ax-red);
+  --color-red-ink: var(--ax-red-ink);
+  --color-sun: var(--ax-yellow);
+  --color-leaf: var(--ax-green);
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+@layer base {
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: calc(var(--ax-header-h) + 16px); }
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+body {
+  margin: 0; background: var(--ax-paper); color: var(--ax-ink);
+  font-family: var(--font-sans); font-feature-settings: 'cv11', 'ss01';
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+img { max-width: 100%; height: auto; }
+:focus-visible { outline: 2px solid var(--ax-red); outline-offset: 3px; border-radius: 2px; }
+.on-dark :focus-visible, .on-dark:focus-visible { outline-color: var(--ax-yellow); }
+
+}
+
+@layer components {
+.wrap { width: 100%; max-width: 1240px; margin-inline: auto; padding-inline: clamp(20px, 4vw, 40px); }
+.eyebrow { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ax-red-ink); display: inline-flex; align-items: center; gap: 0.6rem; }
+.eyebrow::before { content: ''; width: 22px; height: 2px; background: currentColor; }
+.on-dark .eyebrow { color: #f3d64a; }
+.h-display { font-weight: 650; letter-spacing: -0.035em; line-height: 1.02; text-wrap: balance; }
+.h-sec { font-weight: 640; letter-spacing: -0.028em; line-height: 1.08; font-size: clamp(1.9rem, 3.6vw, 3rem); text-wrap: balance; }
+.lede { font-size: clamp(1.05rem, 1.4vw, 1.2rem); line-height: 1.6; color: var(--ax-mute); text-wrap: pretty; }
+.on-dark .lede { color: rgba(255,255,255,0.78); }
+
+.btn { display: inline-flex; align-items: center; gap: 0.6rem; min-height: 48px; padding: 0.8rem 1.35rem; border-radius: 999px; font-weight: 600; font-size: 0.97rem; transition: background-color .25s, color .25s, border-color .25s, transform .25s var(--ax-ease); }
+.btn:hover { transform: translateY(-1px); }
+.btn-red { background: var(--ax-red); color: #fff; }
+.btn-red:hover { background: var(--ax-red-ink); }
+.btn-ghost { border: 1px solid currentColor; }
+.btn-ghost:hover { background: var(--ax-ink); color: #fff; border-color: var(--ax-ink); }
+.on-dark .btn-ghost:hover { background: #fff; color: var(--ax-ink); border-color: #fff; }
+.btn .arr { transition: transform .3s var(--ax-ease); }
+.btn:hover .arr { transform: translateX(3px); }
+.link-u { background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size .35s var(--ax-ease); }
+.link-u:hover { background-size: 100% 1px; }
+
+.skip { position: absolute; left: 12px; top: -60px; z-index: 100; background: #fff; color: var(--ax-ink); padding: 10px 14px; border-radius: 6px; font-weight: 600; }
+.skip:focus { top: 12px; }
+
+}
+
+/* Reveal: content is visible by default; only html.mk-js pre-hides, and IO adds .in */
+html.mk-js .rv { opacity: 0; transform: translateY(22px); transition: opacity .9s var(--ax-ease), transform .9s var(--ax-ease); transition-delay: var(--d, 0ms); }
+html.mk-js .rv.in { opacity: 1; transform: none; }
+
+/* Rule that draws in */
+.draw { transform-origin: left; }
+html.mk-js .draw { transform: scaleX(0); transition: transform 1.2s var(--ax-ease); }
+html.mk-js .draw.in { transform: scaleX(1); }
+
+.tick { width: 18px; height: 18px; flex: none; margin-top: 3px; }
+
+@keyframes ax-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  html.mk-js .rv, html.mk-js .draw { opacity: 1; transform: none; }
+}
+
+/* ---------- Motion layer (pre-hidden states only under html.mk-js, i.e. after hydration with motion allowed) ---------- */
+html.mk-js .rv { transform: translateY(44px) scale(.985); transition-duration: 1.1s; }
+html.mk-js .rv.in { transform: none; }
+
+/* headline word reveal */
+.ax-w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .12em; margin-bottom: -.12em; padding-right: .02em; }
+.ax-wi { display: inline-block; }
+html.mk-js .ax-split .ax-wi { transform: translateY(112%) rotate(4deg); transform-origin: 0 100%; transition: transform 1s var(--ax-ease); transition-delay: calc(var(--i, 0) * 45ms + 60ms); }
+html.mk-js .ax-split.in .ax-wi { transform: none; }
+
+/* image mask wipe (bottom-up) + settle; hero/LCP images only zoom so LCP is never clipped */
+html.mk-js .ax-img:not(.ax-img-hero) { clip-path: inset(100% 0 0 0); transition: clip-path 1.25s var(--ax-ease); }
+html.mk-js .ax-img.in:not(.ax-img-hero) { clip-path: inset(0 0 0 0); }
+html.mk-js .ax-img-hero img { animation: ax-zoom 2.2s var(--ax-ease) both; }
+@keyframes ax-zoom { from { scale: 1.12; } to { scale: 1; } }
+
+/* cards: lift + tilt on desktop hover, press feedback on touch */
+.ax-card { will-change: transform; }
+html.mk-js .ax-card.in { transition: transform .5s var(--ax-ease), box-shadow .5s var(--ax-ease), opacity .9s var(--ax-ease), scale .2s; transition-delay: var(--d, 0ms), 0ms, var(--d, 0ms), 0ms; }
+  .ax-card.in:hover { transition-delay: 0ms; }
+@media (hover: hover) and (pointer: fine) {
+  .ax-card.in:hover { transform: translateY(-6px); box-shadow: 0 24px 50px -24px rgba(23,24,27,.35); }
+  .ax-card.in.tilt { transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(-6px); transition-duration: .18s, .5s, .9s, .2s; }
+}
+.ax-card:active, .btn:active { scale: .965; }
+.btn { transition: background-color .25s, color .25s, border-color .25s, transform .25s var(--ax-ease), translate .35s var(--ax-ease), scale .15s; -webkit-tap-highlight-color: transparent; }
+a, button { -webkit-tap-highlight-color: rgba(200,19,30,.12); }
+
+/* scroll progress line */
+.ax-progress { position: fixed; left: 0; right: 0; top: 0; height: 3px; z-index: 70; background: var(--ax-red); transform-origin: 0 50%; pointer-events: none; }
+
+/* route curtain */
+.ax-curtain { position: fixed; inset: 0; z-index: 95; background: var(--ax-ink); pointer-events: none; }
+.ax-curtain-line { position: absolute; left: 0; right: 0; bottom: 0; height: 6px; background: var(--ax-red); }
+
+/* service-area marquee */
+.ax-mq { overflow: hidden; background: var(--ax-paper); border-top: 1px solid var(--ax-line); padding-block: clamp(18px, 3vw, 30px); }
+.ax-mq-track { display: flex; width: max-content; animation: ax-mq 55s linear infinite; }
+.ax-mq-row { display: flex; flex: none; align-items: center; margin: 0; padding: 0; list-style: none; }
+.ax-mq-row li { display: flex; align-items: center; white-space: nowrap; font-weight: 650; letter-spacing: -0.03em; font-size: clamp(1.7rem, 4.6vw, 3.6rem); line-height: 1.1; color: var(--ax-ink); }
+.ax-mq-row li.ax-mq-o { color: transparent; -webkit-text-stroke: 1.2px var(--ax-ink); }
+.ax-mq-dot { width: .32em; height: .32em; margin-inline: .55em; border-radius: 999px; background: var(--ax-red); flex: none; }
+@media (hover: hover) { .ax-mq:hover .ax-mq-track { animation-play-state: paused; } }
+@keyframes ax-mq { to { transform: translateX(-50%); } }
+
+/* reduced motion: fades only, nothing parked off-screen or clipped */
+@media (prefers-reduced-motion: reduce) {
+  .ax-mq-track { animation: none; flex-wrap: wrap; width: auto; }
+  .ax-mq-row + .ax-mq-row { display: none; }
+  .ax-mq-row { flex-wrap: wrap; padding-inline: 20px; }
+  .ax-mq-row li { font-size: 1.4rem; }
+}
+html.mk-reduced .ax-split .ax-wi, html.mk-reduced .rv { transform: none !important; }
+html.mk-reduced .ax-img { clip-path: none !important; }
